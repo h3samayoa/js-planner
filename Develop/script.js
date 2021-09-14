@@ -1,24 +1,22 @@
 var currentDate = moment().format('dddd, MMMM Do');
-var saveBtn = document.getElementsByClassName("saveBtn");
 
 document.querySelector("#currentDay").innerText = currentDate;
 
 $(document).ready(function () {
 
-    $(".saveBtn").on('click', function() {
-    
-        var descriptionText = $('.description').val();
-        var descriptionTime = $(this).parent().attr("id")
-    
-        localStorage.setItem(descriptionText, descriptionTime);
-        console.log(descriptionText, descriptionTime);
+    $(".saveBtn").on("click", function () {
+        var text = $(this).siblings(".description").val();
+        var time = $(this).parent().attr("id");
+
+        localStorage.setItem(time, text);
     })
+   
     
     function timer() {
         var currentTime = moment().hour();
     
         $(".time-block").each(function () {
-            var timeBlock = parseInt($(this).attr("id"));
+            var timeBlock =  parseInt($(this).attr("id").split("hour")[1]);
             
             if (timeBlock < currentTime) {
                 $(this).removeClass("future");
@@ -37,6 +35,25 @@ $(document).ready(function () {
         })
     }
 
+    function saveDesc() {
+        $(".time-block").each(function () {
+            var timeIdInt = parseInt($(this).attr("id").split("hour")[1]);
+            var timeIdStr = timeIdInt.toString();
+            var descStr = " .description";
+            var hourTxt = "hour"
+
+            var newTimeIdStr = timeIdStr.replace(/^/, '#hour');
+
+            var strId = newTimeIdStr.concat(descStr);
+
+            var timeIdStrEl = timeIdStr.replace(/^/, hourTxt);
+
+            $(strId).val(localStorage.getItem(timeIdStrEl));
+
+        })
+    }
+
+    saveDesc();
     timer();
     
 })
